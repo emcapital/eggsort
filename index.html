@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>Eggsorter – Sign in</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="icon" href="favicon.ico" sizes="any">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <script src="theme.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+    <style>
+:root{
+  --bg:#f6f7f4;--surface:#fff;--ink:#14201f;--muted:#5d6b69;--line:#dde3e0;--focus:#0f7c78;--bad:#c8374f;--ok:#1f9d6b;
+  --yolk:#f4b62c;--btn:#0f4c4a;--btn-ink:#fff;--ease:cubic-bezier(.22,1,.36,1);
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0c1514;--surface:#13211f;--ink:#eef3f1;--muted:#93a5a2;--line:#26373a;--focus:#3cc5bd;--btn:#f4b62c;--btn-ink:#1b1400}}
+:root[data-theme="dark"]{--bg:#0c1514;--surface:#13211f;--ink:#eef3f1;--muted:#93a5a2;--line:#26373a;--focus:#3cc5bd;--btn:#f4b62c;--btn-ink:#1b1400}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:'Plus Jakarta Sans',system-ui,-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--ink);
+  display:grid;grid-template-columns:1.1fr 1fr;transition:background .5s,color .5s,opacity .55s ease}
+body.leave{opacity:0}
+/* ---------- brand panel ---------- */
+.panel{position:relative;overflow:hidden;color:#eaf5f3;padding:44px 52px;display:flex;flex-direction:column;
+  background:radial-gradient(120% 90% at 0% 0%,#15605d 0%,#0c3b39 55%,#082827 100%)}
+.panel::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,rgba(255,255,255,.035) 0 1px,transparent 1px 64px);pointer-events:none}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.15rem;letter-spacing:-.01em;position:relative;z-index:2}
+.mark{width:36px;height:36px;border-radius:11px;background:var(--yolk);display:grid;place-items:center}
+.mark i{width:14px;height:18px;border-radius:50% 50% 50% 50%/62% 62% 38% 38%;background:#0c3b39}
+.pitch{margin-top:clamp(28px,7vh,72px);max-width:460px;position:relative;z-index:2}
+.pitch h2{font-size:clamp(1.9rem,3.2vw,2.7rem);font-weight:800;letter-spacing:-.035em;line-height:1.08}
+.pitch p{margin-top:16px;color:#a9cbc7;line-height:1.6;font-size:1rem}
+/* conveyor */
+.line{position:relative;margin-top:auto;height:210px;z-index:1}
+.belt{position:absolute;left:-60px;right:-60px;bottom:78px;height:16px;border-radius:8px;
+  background:repeating-linear-gradient(90deg,#0a2423 0 18px,#123635 18px 36px);background-size:36px 100%;animation:belt 1.1s linear infinite;box-shadow:0 2px 0 rgba(255,255,255,.08)}
+@keyframes belt{to{background-position:36px 0}}
+.egg{position:absolute;bottom:92px;left:-12%;width:var(--w);height:calc(var(--w)*1.3);border-radius:50% 50% 50% 50%/62% 62% 38% 38%;
+  background:radial-gradient(circle at 35% 28%,rgba(255,255,255,.75),transparent 40%),var(--c);box-shadow:inset -4px -6px 10px rgba(0,0,0,.14),0 6px 8px rgba(0,0,0,.25);
+  animation:roll var(--t) linear infinite;animation-delay:var(--d)}
+@keyframes roll{to{left:112%}}
+.scan{position:absolute;left:58%;bottom:70px;width:70px;height:130px;transform:translateX(-50%);border-radius:14px 14px 0 0;
+  border:2px solid rgba(244,182,44,.7);border-bottom:0;background:linear-gradient(180deg,rgba(244,182,44,.22),transparent);animation:pulse 2.4s ease-in-out infinite}
+.scan::before{content:"";position:absolute;left:0;right:0;height:2px;background:var(--yolk);box-shadow:0 0 14px var(--yolk);animation:sweep 1.6s ease-in-out infinite alternate}
+@keyframes sweep{from{top:6%}to{top:92%}}
+@keyframes pulse{50%{box-shadow:0 0 28px rgba(244,182,44,.35)}}
+.bins{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px;position:relative;z-index:2}
+.bin{padding:14px 14px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);backdrop-filter:blur(6px)}
+.bin b{display:block;font-size:1.45rem;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;transition:color .3s}
+.bin span{font-size:.74rem;color:#9fc3bf}
+.bin.hit b{color:var(--yolk);animation:bump .5s var(--ease)}
+@keyframes bump{40%{transform:translateY(-4px)}}
+.live{display:flex;align-items:center;gap:8px;font-size:.8rem;color:#a9cbc7;margin-top:18px;position:relative;z-index:2}
+.live i{width:8px;height:8px;border-radius:50%;background:#3fe0a0;animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.25;transform:scale(.7)}}
+/* ---------- form side ---------- */
+.side{display:grid;place-items:center;padding:32px 28px;position:relative}
+.box{width:min(400px,100%)}
+.top{animation:in .8s var(--ease) both}
+.top h1{font-size:1.9rem;font-weight:800;letter-spacing:-.035em}
+.top p{color:var(--muted);margin:8px 0 28px;line-height:1.55;font-size:.95rem}
+@keyframes in{from{opacity:0;transform:translateY(18px)}}
+.fld{position:relative;margin-bottom:14px;animation:in .8s var(--ease) both;animation-delay:calc(.1s + var(--i)*.07s)}
+.fld input,.fld select{width:100%;height:56px;padding:22px 44px 6px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);
+  font:500 .95rem 'Plus Jakarta Sans',sans-serif;outline:none;appearance:none;-webkit-appearance:none;transition:border-color .25s,box-shadow .25s}
+.fld input:hover,.fld select:hover{border-color:color-mix(in srgb,var(--focus) 45%,var(--line))}
+.fld input:focus,.fld select:focus{border-color:var(--focus);box-shadow:0 0 0 4px color-mix(in srgb,var(--focus) 18%,transparent)}
+.fld label{position:absolute;left:16px;top:18px;color:var(--muted);font-size:.93rem;pointer-events:none;transform-origin:left;transition:transform .35s var(--ease),color .25s}
+.fld input:focus+label,.fld input:not(:placeholder-shown)+label,.fld select+label{transform:translateY(-10px) scale(.78)}
+.fld input:focus+label,.fld select:focus+label{color:var(--focus)}
+.chev{position:absolute;right:16px;top:23px;width:12px;height:12px;stroke:var(--muted);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:transform .3s var(--ease)}
+.fld select:focus~.chev{transform:rotate(180deg)}
+.eye{position:absolute;right:6px;top:8px;width:40px;height:40px;border:0;background:none;border-radius:10px;cursor:pointer;display:grid;place-items:center}
+.eye svg{width:20px;height:20px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.eye .sl{stroke-dasharray:26;stroke-dashoffset:26;transition:stroke-dashoffset .35s var(--ease)}
+.eye[aria-pressed="true"] .sl{stroke-dashoffset:0}
+.msg{min-height:20px;font-size:.84rem;color:var(--bad);margin:-2px 0 6px;font-weight:500}
+.row{display:flex;justify-content:space-between;align-items:center;font-size:.88rem;margin:4px 0 22px;animation:in .8s var(--ease) both;animation-delay:.52s}
+.chk{display:flex;align-items:center;gap:10px;cursor:pointer;color:var(--ink)}
+.chk input{position:absolute;opacity:0}
+.cb{width:20px;height:20px;border-radius:6px;border:1.5px solid var(--line);background:var(--surface);display:grid;place-items:center;transition:background .25s,border-color .25s,transform .3s var(--ease)}
+.cb svg{width:12px;height:12px;stroke:var(--btn-ink);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:16;stroke-dashoffset:16;transition:stroke-dashoffset .35s var(--ease)}
+.chk input:checked+.cb{background:var(--btn);border-color:var(--btn);transform:scale(1.08)}
+.chk input:checked+.cb svg{stroke-dashoffset:0}
+.chk input:focus-visible+.cb{outline:2px solid var(--focus);outline-offset:2px}
+a{color:var(--focus);font-weight:600;text-decoration:none;background:linear-gradient(currentColor,currentColor) left bottom/0 1.5px no-repeat;transition:background-size .3s var(--ease)}
+a:hover{background-size:100% 1.5px}
+.go{position:relative;display:block;width:100%;height:54px;border:0;border-radius:12px;background:var(--btn);color:var(--btn-ink);font:700 .98rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;overflow:hidden;
+  transition:transform .3s var(--ease),box-shadow .3s,width .45s var(--ease),border-radius .45s var(--ease),background .3s;animation:in .8s var(--ease) both;animation-delay:.6s;box-shadow:0 10px 24px -12px var(--btn)}
+.go:hover{transform:translateY(-2px);box-shadow:0 16px 28px -12px var(--btn)}
+.go:active{transform:scale(.98)}
+.go::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg)}
+.go:hover::after{left:120%;transition:left .7s var(--ease)}
+.go .t{transition:opacity .25s}
+.go .sp,.go .ok{position:absolute;inset:0;margin:auto;opacity:0}
+.go .sp{width:22px;height:22px;border:3px solid color-mix(in srgb,var(--btn-ink) 30%,transparent);border-top-color:var(--btn-ink);border-radius:50%}
+.go .ok{width:26px;height:26px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30}
+.go.load,.go.done{width:54px;margin:0 auto;border-radius:50%}
+.go.load .t,.go.done .t{opacity:0}
+.go.load .sp{opacity:1;animation:rot .8s linear infinite}
+.go.done{background:var(--ok);box-shadow:0 10px 24px -12px var(--ok)}
+.go.done .ok{opacity:1;animation:draw .5s var(--ease) .1s forwards}
+@keyframes okpop{40%{transform:scale(1.14)}}
+.go.done{animation:okpop .5s var(--ease)}
+@keyframes rot{to{transform:rotate(360deg)}}
+@keyframes draw{to{stroke-dashoffset:0}}
+.or{display:flex;align-items:center;gap:12px;color:var(--muted);font-size:.8rem;margin:22px 0 16px;animation:in .8s var(--ease) both;animation-delay:.68s}
+.or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+.sso{width:100%;height:50px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);font:600 .92rem 'Plus Jakarta Sans',sans-serif;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;transition:border-color .25s,transform .3s var(--ease);animation:in .8s var(--ease) both;animation-delay:.74s}
+.sso:hover{border-color:var(--focus);transform:translateY(-2px)}
+.sso svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.help{margin-top:26px;font-size:.84rem;color:var(--muted);text-align:center;animation:in .8s var(--ease) both;animation-delay:.8s}
+.shake{animation:shake .45s}
+@keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+/* success */
+.form{transition:opacity .45s,transform .6s var(--ease)}
+.box.ok .form{opacity:0;transform:translateY(-16px);pointer-events:none;position:absolute;inset:0}
+.done-v{display:none;text-align:center}
+.box.ok .done-v{display:block;animation:in .8s var(--ease) both}
+.done-v .big{width:68px;height:68px;border-radius:50%;background:var(--ok);margin:0 auto 20px;display:grid;place-items:center;animation:pop .6s var(--ease) both}
+.done-v .big svg{width:32px;height:32px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:30;stroke-dashoffset:30;animation:draw .5s var(--ease) .3s forwards}
+@keyframes pop{from{transform:scale(.4);opacity:0}}
+.done-v h2{font-size:1.5rem;letter-spacing:-.03em}
+.done-v p{color:var(--muted);margin:8px 0 22px;font-size:.92rem}
+.prog{height:5px;border-radius:5px;background:var(--line);overflow:hidden}
+.prog i{display:block;height:100%;width:0;background:var(--ok);border-radius:5px}
+.box.ok .prog i{animation:fill 2.5s cubic-bezier(.45,.05,.25,1) forwards}
+@keyframes fill{to{width:100%}}
+.again{margin-top:18px;background:none;border:0;color:var(--muted);font:600 .85rem 'Plus Jakarta Sans',sans-serif;cursor:pointer}
+.theme{position:absolute;top:calc(18px + env(safe-area-inset-top,0px));right:20px;width:42px;height:42px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;display:grid;place-items:center;transition:transform .5s var(--ease)}
+.theme:hover{transform:rotate(90deg)}
+.theme svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+@media (max-width:880px){.help{margin-top:12px;font-size:.82rem}}
+@media (max-width:1100px){.panel{padding:34px 32px}.bins{grid-template-columns:repeat(2,1fr)}}
+@media (max-height:740px) and (min-width:881px){.pitch{margin-top:24px}.pitch p{display:none}.line{height:170px}.bins{margin-top:12px}}
+@media (min-width:1500px){.box{width:min(440px,100%)}.top h1{font-size:2.1rem}}
+@media (max-width:880px){
+  html,body{height:auto}
+  body{grid-template-columns:1fr;grid-template-rows:auto 1fr;min-height:100vh;min-height:100dvh}
+  .panel{padding:22px 22px 0}
+  .pitch{margin-top:18px}.pitch h2{font-size:1.5rem}.pitch p,.bins,.live{display:none}
+  .line{height:140px;margin-top:6px}.belt{bottom:28px}.egg{bottom:42px}.scan{bottom:20px;height:96px}
+  .side{align-items:start;padding:28px 20px 84px}
+  .theme{position:fixed;top:auto;bottom:calc(16px + env(safe-area-inset-bottom,0px));right:16px;z-index:5}
+  .fld input{font-size:16px}}
+@media (max-width:600px){.pitch{display:none}.panel{padding:18px 18px 0}.line{height:110px}.belt{bottom:22px}.egg{bottom:36px}.scan{bottom:14px;height:80px}.top h1{font-size:1.6rem}.top p{margin-bottom:22px}}
+@media (max-width:360px){.side{padding:22px 14px 84px}.top h1{font-size:1.45rem}}
+/* mobile: fit one screen, no scrolling */
+@media (max-width:880px){
+  html,body{height:100%;overflow:hidden}
+  body{height:100vh;height:100dvh;min-height:0;grid-template-rows:auto minmax(0,1fr)}
+  .side{align-items:center;padding:12px 20px calc(16px + env(safe-area-inset-bottom,0px))}
+  .theme{top:calc(12px + env(safe-area-inset-top,0px));bottom:auto;right:14px;width:38px;height:38px}}
+@media (max-width:880px) and (max-height:760px){
+  .line{height:90px}.belt{bottom:20px}.egg{bottom:34px}.scan{bottom:12px;height:70px}
+  .top h1{font-size:1.45rem}.top p{margin:6px 0 16px;font-size:.88rem}
+  .fld{margin-bottom:10px}.fld input{height:52px}.go{height:50px}.or{margin:14px 0 12px}.sso{height:46px}}
+@media (max-width:880px) and (max-height:640px){
+  .line{display:none}.panel{padding:14px 18px}.top p{display:none}.top h1{margin-bottom:14px}}
+@media (max-height:500px) and (orientation:landscape) and (max-width:900px){
+  body{grid-template-columns:.8fr 1fr;grid-template-rows:1fr}
+  .panel{padding:16px 18px 0}.line{display:block;height:100px;margin-top:auto}
+  .top p,.or{display:none}.top h1{margin-bottom:12px}.fld input{height:48px}.go{height:48px}.sso{height:44px;margin-top:10px}.msg{min-height:14px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+.mark{background:none!important;overflow:hidden}.mark img{display:block;width:100%;height:100%}
+</style>
+  </head>
+  <body>
+    <aside class="panel" aria-hidden="true">
+      <div class="brand"><span class="mark"><img src="favicon.svg"
+            alt></span>Eggsorter</div>
+      <div class="pitch">
+        <h2>Every egg weighed, graded and accounted for.</h2>
+        <p>Track your sorting lines, grade counts and packing output in
+          real time, from the farm floor to the dispatch dock.</p>
+      </div>
+      <div class="line" id="line"><div class="belt"></div><div
+          class="scan"></div></div>
+      <div class="bins" id="bins">
+        <div class="bin"><b>0</b><span>Small · under 53 g</span></div>
+        <div class="bin"><b>0</b><span>Medium · 53–63 g</span></div>
+        <div class="bin"><b>0</b><span>Large · 63–73 g</span></div>
+        <div class="bin"><b>0</b><span>XL · over 73 g</span></div>
+      </div>
+      <div class="live"><i></i>Line 2 is grading now</div>
+    </aside>
+
+    <main class="side">
+      <button class="theme" id="theme" aria-label="Toggle theme"><svg
+          viewBox="0 0 24 24"><path
+            d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" /></svg></button>
+      <div class="box" id="box">
+        <div class="form" id="form">
+          <div class="top"><h1 id="h">Sign in to
+              Eggsorter</h1><p>Enter your email and password to
+              open your grading dashboard.</p></div>
+          <form id="f" novalidate>
+            <div class="fld" style="--i:0"><input id="em"
+                type="email" placeholder=" "
+                autocomplete="email"><label
+                for="em">Email</label></div>
+            <div class="fld" style="--i:1"><input id="pw"
+                type="password" placeholder=" "
+                autocomplete="current-password"><label
+                for="pw">Password</label>
+              <button type="button" class="eye" id="eye"
+                aria-label="Show password"
+                aria-pressed="false"><svg
+                  viewBox="0 0 24 24"><path
+                    d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z" /><circle
+                    cx="12" cy="12" r="3" /><path class="sl"
+                    d="M4 4l16 16" /></svg></button></div>
+            <div class="msg" id="msg" role="alert"></div>
+            <button class="go" id="go" type="submit"><span
+                class="t">Sign in</span><span
+                class="sp"></span><svg class="ok"
+                viewBox="0 0 24 24"><path
+                  d="M5 12.5l4.5 4.5L19 7.5" /></svg></button>
+          </form>
+          <div class="or">or</div>
+          <button class="sso" id="gg" type="button"><svg
+              viewBox="0 0 24 24"><path stroke="none"
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" /><path
+                stroke="none" fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84A11 11 0 0012 23z" /><path
+                stroke="none" fill="#FBBC05"
+                d="M5.84 14.1a6.6 6.6 0 010-4.2V7.06H2.18a11 11 0 000 9.88l3.66-2.84z" /><path
+                stroke="none" fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1A11 11 0 002.18 7.06l3.66 2.84C6.71 7.31 9.14 5.38 12 5.38z" /></svg><span
+              id="ggT">Continue with Google</span></button>
+          <p class="help"><span id="swt">New to Eggsorter?</span> <a
+              href="#" id="swl">Create an account</a></p>
+        </div>
+        <div class="done-v" aria-live="polite">
+          <div class="big"><svg viewBox="0 0 24 24"><path
+                d="M5 12.5l4.5 4.5L19 7.5" /></svg></div>
+          <h2>Signed in</h2><p id="dp">Opening your dashboard…</p>
+          <div class="prog"><i></i></div>
+          <button class="again" id="again" type="button">Sign
+            out</button>
+        </div>
+      </div>
+    </main>
+
+    <script type="module">
+import {watchAuth,signInEmail,signUpEmail,signInGoogle,logOut} from './firebase.js';
+// Page to open after sign-in (leave empty to stay on this page)
+const REDIRECT_URL='dashboard.html';
+const $=id=>document.getElementById(id);
+// conveyor eggs: [width px, colour]
+const cols=['#fffdf7','#fbf4e6','#e3b98d','#d3a06f'];
+const line=$('line');
+for(let i=0;i<9;i++){
+  const e=document.createElement('i');e.className='egg';
+  const w=[30,36,42,48][i%4===1?1:i%3===0?2:i%5===0?3:0];
+  e.style.cssText=`--w:${w}px;--c:${cols[(i*7)%4]};--t:15s;--d:${-i*1.67}s`;
+  line.appendChild(e);
+}
+// live counters
+const bins=[...document.querySelectorAll('#bins .bin')],n=[12480,31960,27415,6032];
+const fmt=v=>v.toLocaleString('en-US');
+bins.forEach((b,i)=>b.firstElementChild.textContent=fmt(n[i]));
+setInterval(()=>{
+  const r=Math.random(),i=r<.15?0:r<.55?1:r<.9?2:3;n[i]++;
+  const b=bins[i];b.firstElementChild.textContent=fmt(n[i]);
+  b.classList.remove('hit');void b.offsetWidth;b.classList.add('hit');
+},900);
+// password toggle
+$('eye').onclick=e=>{const b=e.currentTarget,s=$('pw').type==='password';$('pw').type=s?'text':'password';b.setAttribute('aria-pressed',s);b.setAttribute('aria-label',s?'Hide password':'Show password')};
+// auth flow
+const box=$('box'),go=$('go'),f=$('f'),wait=ms=>new Promise(r=>setTimeout(r,ms));
+let signup=false,busy=false;
+function err(t){$('msg').textContent=t;box.classList.remove('shake');void box.offsetWidth;box.classList.add('shake')}
+function explain(x){return({
+  'auth/invalid-credential':'Incorrect email or password.',
+  'auth/wrong-password':'Incorrect email or password.',
+  'auth/user-not-found':'Incorrect email or password.',
+  'auth/invalid-email':'Enter a valid email address.',
+  'auth/email-already-in-use':'An account with this email already exists. Sign in instead.',
+  'auth/weak-password':'Choose a password with at least 6 characters.',
+  'auth/too-many-requests':'Too many attempts. Wait a few minutes and try again.',
+  'auth/network-request-failed':'No connection. Check your internet and try again.',
+  'auth/popup-blocked':'Your browser blocked the Google window. Allow pop-ups and try again.',
+  'auth/operation-not-allowed':'This sign-in method is off. Turn it on in Firebase Authentication > Sign-in method.',
+  'auth/unauthorized-domain':'Add this domain in Firebase Authentication > Settings > Authorized domains.'
+})[x.code]||'Something went wrong. Try again.'}
+function setMode(up){signup=up;$('msg').textContent='';
+  $('h').textContent=up?'Create your Eggsorter account':'Sign in to Eggsorter';
+  go.querySelector('.t').textContent=up?'Create account':'Sign in';
+  $('swt').textContent=up?'Already have an account?':'New to Eggsorter?';
+  $('swl').textContent=up?'Sign in':'Create an account';
+  $('pw').autocomplete=up?'new-password':'current-password'}
+$('swl').onclick=e=>{e.preventDefault();setMode(!signup)};
+function showDone(u){
+  $('dp').textContent='Signed in as '+(u.displayName||u.email)+'. Opening your dashboard…';
+  go.classList.remove('load');go.classList.add('done');box.classList.add('ok');
+  if(REDIRECT_URL)setTimeout(()=>{document.body.classList.add('leave');setTimeout(()=>location.href=REDIRECT_URL,550)},2500)}
+f.addEventListener('submit',async e=>{
+  e.preventDefault();if(busy)return;
+  const em=$('em').value.trim(),pw=$('pw').value;
+  if(!/^\S+@\S+\.\S+$/.test(em))return err('Enter a valid email address.');
+  if(pw.length<6)return err('Your password must be at least 6 characters.');
+  busy=true;$('msg').textContent='';go.classList.add('load');
+  try{
+    const u=await(signup?signUpEmail:signInEmail)(em,pw);
+    go.classList.replace('load','done');await wait(650);showDone(u);
+  }catch(x){go.classList.remove('load');err(explain(x))}
+  finally{busy=false}
+});
+$('gg').onclick=async()=>{
+  if(busy)return;busy=true;$('msg').textContent='';$('ggT').textContent='Opening Google…';
+  try{showDone(await signInGoogle())}
+  catch(x){if(!['auth/popup-closed-by-user','auth/cancelled-popup-request'].includes(x.code))err(explain(x))}
+  finally{busy=false;$('ggT').textContent='Continue with Google'}
+};
+$('again').onclick=()=>logOut();
+watchAuth(u=>{
+  if(u&&!busy)showDone(u);
+  if(!u){box.classList.remove('ok');go.classList.remove('done','load');f.reset()}
+});
+const MOON='<path d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />',SUN='<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>';
+function themeIcon(){const d=EggTheme.get()==='dark';$('theme').firstElementChild.innerHTML=d?SUN:MOON;$('theme').setAttribute('aria-label',d?'Switch to light mode':'Switch to dark mode')}
+$('theme').onclick=e=>EggTheme.toggle(e);
+addEventListener('themechange',themeIcon);themeIcon();
+</script>
+  </body>
+</html>
